@@ -25,7 +25,7 @@ router.post('/mark', markAttendance);
 router.get('/review/:sectionId/:date', getAttendanceForReview);
 
 // @route   PUT api/attendance/correct/:recordId
-// @desc    Correct a specific student's status (Absent -> Present)
+// @desc    Correct a specific student's status 
 
 router.put('/correct/:recordId', correctAttendance);
 
