@@ -36,6 +36,9 @@ app.use('/api/sections', require('./routes/sectionRoutes'));
 app.use('/api/attendance', require('./routes/attendanceRoutes'));
 // Add the new student routes
 app.use('/api/students', require('./routes/studentRoutes'));
+// OTP and QR code routes
+app.use('/api/otp', require('./routes/otpRoutes'));
+app.use('/api/qr', require('./routes/qrRoutes'));
 
 
 // --- Server Listener ---

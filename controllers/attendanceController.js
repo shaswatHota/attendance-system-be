@@ -123,3 +123,49 @@ exports.submitAttendance = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+// @desc    Bulk update attendance status (for Select All / bulk operations)
+// @route   PUT /api/attendance/bulk-update/:recordId
+exports.bulkUpdateAttendance = async (req, res) => {
+    try {
+        const { studentIds, status } = req.body;
+
+        if (!studentIds || !Array.isArray(studentIds) || !status) {
+            return res.status(400).json({ msg: 'Student IDs array and status are required' });
+        }
+
+        if (status !== 'Present' && status !== 'Absent') {
+            return res.status(400).json({ msg: 'Status must be either "Present" or "Absent"' });
+        }
+
+        const attendanceRecord = await Attendance.findById(req.params.recordId);
+
+        if (!attendanceRecord) {
+            return res.status(404).json({ msg: 'Attendance record not found' });
+        }
+
+        if (attendanceRecord.isSubmitted) {
+            return res.status(400).json({ msg: 'Cannot update attendance after it has been submitted' });
+        }
+
+        // Update all specified students
+        studentIds.forEach(studentId => {
+            const record = attendanceRecord.records.find(
+                rec => rec.student.toString() === studentId
+            );
+            if (record) {
+                record.status = status;
+            }
+        });
+
+        await attendanceRecord.save();
+
+        res.json({
+            msg: `Attendance updated for ${studentIds.length} students`,
+            attendance: attendanceRecord,
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};

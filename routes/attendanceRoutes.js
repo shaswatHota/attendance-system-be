@@ -6,6 +6,7 @@ const {
     getAttendanceForReview,
     correctAttendance,
     submitAttendance,
+    bulkUpdateAttendance,
 } = require('../controllers/attendanceController');
 const authenticateJwt = require('../middleware/auth'); // Secure all attendance routes
 
@@ -33,5 +34,10 @@ router.put('/correct/:recordId', correctAttendance);
 // @desc    Finalize and lock the attendance record
 
 router.post('/submit/:recordId', submitAttendance);
+
+// @route   PUT api/attendance/bulk-update/:recordId
+// @desc    Bulk update attendance status (Select All functionality)
+
+router.put('/bulk-update/:recordId', bulkUpdateAttendance);
 
 module.exports = router;
